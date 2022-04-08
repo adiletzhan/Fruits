@@ -35,11 +35,20 @@ class MainActivity : AppCompatActivity() {
                 RetrofitInstance.api.getAllFruits()
             } catch (e: IOException){
                 Log.e(TAG, "IOException, you might not have internet connection")
+                binding.progressBar.isVisible = false
                 return@launchWhenCreated
             } catch (e: HttpException) {
                 Log.e(TAG, "HttpException, unexpected response")
+                binding.progressBar.isVisible = false
                 return@launchWhenCreated
             }
+
+            if(response.isSuccessful && response.body() != null) {
+                fruitsAdapter.fruits = response.body()!!
+            } else {
+                Log.e(TAG, "Response not successful")
+            }
+            binding.progressBar.isVisible = false
         }
     }
 
